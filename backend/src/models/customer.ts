@@ -8,14 +8,16 @@ const customerSchema = new mongoose.Schema<ICustomerModel>({
     type: String,
     required: true,
   },
-  phoneNumer: {
+  phoneNumber: {
     type: String,
     required: true,
+    unique: true,
   },
   loyalityPoints: {
     type: Number,
     required: true,
     unique: true,
+    default: 0,
   },
   createdAt: {
     type: Date,

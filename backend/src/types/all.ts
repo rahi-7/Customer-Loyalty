@@ -18,10 +18,21 @@ export interface CreateUserType {
 
 export interface CustomerType {
   fullName: string;
-  phoneNumer: string;
+  phoneNumber: string;
   loyalityPoints: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface CreateCustomerType {
+  fullName: string;
+  phoneNumber: string;
+}
+
+export interface CreatePurchaseType {
+  customerPhoneNumber: string;
+  numberOfItems: number;
+  totalAmount: number;
 }
 
 export interface loginTypes {
