@@ -76,3 +76,28 @@ export const purchase = async (req: Request, res: Response) => {
     console.log(err);
   }
 };
+
+export const redeemPoints = async (req: Request, res: Response) => {
+  const phone = req.params.phone.trim();
+  const points = +req.params.points.trim();
+
+  try {
+    const customer = await Customer.findOne({ phoneNumber: phone });
+
+    if (customer) {
+      if (customer.loyalityPoints >= points) {
+        customer.loyalityPoints -= points;
+        const saved = await customer.save();
+        res
+          .status(200)
+          .json({
+            customer: saved, 
+            pointsRedeemed: points,
+            message: "points redeemed successfully", });
+      } else {
+        res.status(400).json({ message: "insufficient points" });
+      }
+    } else {
+      res.status(404).json({ message: "customer not found" });
+    }
+}

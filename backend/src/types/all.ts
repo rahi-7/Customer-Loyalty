@@ -28,7 +28,7 @@ export interface CreateCustomerType {
   fullName: string;
   phoneNumber: string;
 }
-
+    
 export interface CreatePurchaseType {
   customerPhoneNumber: string;
   numberOfItems: number;
