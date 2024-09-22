@@ -1,6 +1,10 @@
-"use client"; 
+"use client";
 
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+
+
 
 interface Product {
   id: number;
@@ -18,15 +22,48 @@ const Shop: React.FC = () => {
   const [points, setPoints] = useState<number>(0);
   const [cartCount, setCartCount] = useState<number>(0);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const router = useRouter();
 
-  const handlePurchase = () => {
-    alert(`You have purchased ${cartCount} products! Total points earned: ${points}`);
-    setCartCount(0);
-    setPoints(0);
+  // Load points and cart count from local storage on mount
+  useEffect(() => {
+    const storedPoints = localStorage.getItem('points');
+    const storedCartCount = localStorage.getItem('cartCount');
+
+    if (storedPoints) {
+      setPoints(Number(storedPoints));
+    }
+    if (storedCartCount) {
+      setCartCount(Number(storedCartCount));
+    }
+  }, []);
+
+  // Update local storage whenever points or cart count changes
+  useEffect(() => {
+    localStorage.setItem('points', points.toString());
+    localStorage.setItem('cartCount', cartCount.toString());
+  }, [points, cartCount]);
+
+  const handlePurchase = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/customers/purchase', {
+        customerPhoneNumber: phoneNumber,
+        numberOfItems: cartCount,
+        totalAmount: points * 10,
+      });
+      alert(`Purchase successful! You have earned ${response.data.customer.loyalityPoints} points.`);
+      console.log(response.data);
+      setPhoneNumber('');
+      setCartCount(0);
+      setPoints(0);
+      localStorage.removeItem('points');
+      localStorage.removeItem('cartCount');
+    } catch (error) {
+      alert('Error during purchase. Please try again.');
+    }
   };
 
   const handleAddToCart = (price: number) => {
-    const earnedPoints = price / 10; // Earn 1 point for every $10 spent
+    const earnedPoints = price / 10;
     setPoints(points + earnedPoints);
     setCartCount(cartCount + 1);
     alert(`You earned ${earnedPoints} points!`);
@@ -38,7 +75,9 @@ const Shop: React.FC = () => {
       <ul className="space-y-4 w-full max-w-xl">
         {products.map((product) => (
           <li key={product.id} className="flex justify-between items-center bg-white p-4 shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
-            <span className="text-lg font-semibold text-gray-800">{product.name} - <span className="text-gray-600">${product.price}</span></span>
+            <span className="text-lg font-semibold text-gray-800">
+              {product.name} - <span className="text-gray-600">${product.price}</span>
+            </span>
             <button
               onClick={() => handleAddToCart(product.price)}
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors duration-300"
@@ -48,10 +87,10 @@ const Shop: React.FC = () => {
           </li>
         ))}
       </ul>
+
       <p className="mt-6 text-xl font-semibold text-gray-800">You have {cartCount} products in your cart.</p>
       <p className="mt-2 text-xl font-semibold text-gray-800">You have {points} points.</p>
-      
-      {/* Phone Number Input */}
+
       <div className="mb-6 w-full max-w-xs">
         <label className="block text-lg font-semibold mb-2 text-gray-800">Phone Number:</label>
         <input
@@ -63,18 +102,28 @@ const Shop: React.FC = () => {
         />
       </div>
 
-      {/* Purchase Button */}
       <button
         onClick={handlePurchase}
-        className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors duration-300"
+        className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors duration-300 mb-6"
       >
         Purchase
+      </button>
+
+      <button
+        onClick={() => {
+          router.push('/CheckPoints')
+        }}
+        className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300"
+      >
+        Check Points
       </button>
     </div>
   );
 };
 
 export default Shop;
+
+
 
 
 
