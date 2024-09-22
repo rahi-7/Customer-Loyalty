@@ -45,7 +45,7 @@ const Shop: React.FC = () => {
 
   const handlePurchase = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/customers/purchase', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/customers/purchase`, {
         customerPhoneNumber: phoneNumber,
         numberOfItems: cartCount,
         totalAmount: points * 10,

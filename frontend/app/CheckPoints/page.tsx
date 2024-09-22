@@ -17,7 +17,7 @@ const CheckPoints = () => {
     setLoading(true); // Set loading to true
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/customers/get_customer_by_phone/${phoneNumber}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers/get_customer_by_phone/${phoneNumber}`);
       setPoints(response.data.customer.loyalityPoints); // Adjust based on your response structure
       setError(null); // Clear any previous errors
     } catch (err: unknown) {

@@ -18,7 +18,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/create_user",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/create_user`,
         {
           firstName,
           middleName,
