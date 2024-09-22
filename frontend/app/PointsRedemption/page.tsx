@@ -44,7 +44,7 @@ const PointsRedemption: React.FC<PointsRedemptionProps> = ({ points, onRedeemSuc
         onRedeemSuccess();
       }
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error.response) {
         setError(error.response.data.message || `Server error: ${error.response.status}`);
       } else {
