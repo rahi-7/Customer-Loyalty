@@ -31,7 +31,7 @@ export default function SignUp() {
        } else {
          setError(`Unexpected status code: ${response.status}`);
        }
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err.response) {
         setError(err.response.data.message || 'Sign up failed');
       } else {

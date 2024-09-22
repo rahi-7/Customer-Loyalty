@@ -1,8 +1,5 @@
 "use client"; 
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-
 interface Customer {
   name: string;
   points: number;
