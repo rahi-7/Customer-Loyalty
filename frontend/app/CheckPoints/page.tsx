@@ -67,7 +67,11 @@ const CheckPoints = () => {
           
           {/* Redeem Points Button */}
           <button
-            onClick={() => router.push('/PointsRedemption')} // Navigate to PointsRedemption
+            onClick={() => {
+              localStorage.setItem('customerPoints', JSON.stringify(points));
+              localStorage.setItem('customerPhoneNumber', phoneNumber);
+              router.push('/PointsRedemption');
+            }} // Navigate to PointsRedemption
             className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4"
           >
             Redeem Points

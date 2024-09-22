@@ -1,16 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
 const PointsRedemption = () => {
-  const [points] = useState<number>(0);
+  const [points, setPoints] = useState<number>(0);
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [redeemPoints, setRedeemPoints] = useState<number>(0);
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const router = useRouter();
+
+  useEffect(() => {
+    console.log(localStorage.getItem("customerPhoneNumber"));
+    console.log(localStorage.getItem("customerPoints"));
+    
+    setPhoneNumber(localStorage.getItem("customerPhoneNumber") ?? "");
+    setRedeemPoints(+(localStorage.getItem("customerPoints") ?? "0"));
+    setPoints(+(localStorage.getItem("customerPoints") ?? "0"));
+  }, []);
 
   const handleRedeem = async () => {
     setError("");
