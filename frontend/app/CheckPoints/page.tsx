@@ -1,8 +1,10 @@
 "use client"; // Ensure this is a client component
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { Axios } from 'axios';
+import { AxiosError } from 'axios';
 
 
 const CheckPoints = () => {
@@ -20,12 +22,19 @@ const CheckPoints = () => {
       const response = await axios.get(`http://localhost:5000/api/customers/get_customer_by_phone/${phoneNumber}`);
       setPoints(response.data.customer.loyalityPoints); // Adjust based on your response structure
       setError(null); // Clear any previous errors
-    } catch (err: any) {
-      setError(err.response?.data.message || 'Error fetching customer data');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        // If err is an instance of Error, access its message safely
+        setError(err.message || 'Error fetching customer data');
+      } else {
+        // Handle the case where err is not an instance of Error
+        setError('An unexpected error occurred');
+      }
       setPoints(null); // Clear points if an error occurs
     } finally {
       setLoading(false); // Set loading to false
     }
+    
   };
 
   return (
