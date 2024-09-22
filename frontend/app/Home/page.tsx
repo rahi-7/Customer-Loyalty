@@ -1,21 +1,21 @@
-import React from 'react';
 import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold mb-6">Welcome to Loyalty E-commerce</h1>
-      <p className="text-lg mb-4">Shop and earn points for your purchases!</p>
-      <div className="space-x-4">
-        <Link href="/shop">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Go to Shop</button>
-        </Link>
-        <Link href="/redeem">
-          <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Redeem Points</button>
-        </Link>
-      </div>
+    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-blue-200 to-green-200 p-6">
+      <h1 className="text-5xl font-extrabold text-gray-800 mb-6">Welcome to Loyalty E-commerce</h1>
+      <p className="text-xl text-gray-700 mb-8 text-center max-w-md">
+        Join our Customer Loyalty program to earn points for every purchase. 
+        Redeem your points for discounts, exclusive offers, and more!
+      </p>
+      <Link href="/Login">
+        <button className="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+          Get Started
+        </button>
+      </Link>
     </div>
   );
 }
+
 
 

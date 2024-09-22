@@ -1,10 +1,14 @@
-import express from "express";
-import { login, signUp } from "../controllers/auth";
+import express from 'express';
+import { login, signUp } from '../controllers/auth'; // Make sure these controllers exist and are properly set up
 
 const router = express.Router();
 
-router.post("/create_user", signUp);
+// Route for signing up users
+router.post('/create_user', signUp);
 
-router.post("/login", login);
+// Route for logging in users
+router.post('/login', login);
 
-export = router;
+export default router;
+
+

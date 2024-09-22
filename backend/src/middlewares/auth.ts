@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { config } from "../config";
-import User from "../models/User";
-import { IUser } from "../types/modelTypes/UserType";
+import User from "../models/user"; // Adjust this path as necessary
+import { IUser } from '../types/modelTypes/UserTypes'; // Adjust this path accordingly
 
 // Extend the Request interface to include the user property
 interface AuthRequested extends Request {
@@ -18,16 +18,15 @@ const authenticateToken = async (
   let token: string | undefined;
 
   // Check for token in Authorization header
-  const authHeader = req.body.token;
-  console.log(authHeader);
-  if (authHeader && authHeader) {
-    token = authHeader;
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    token = authHeader.split(" ")[1];
   }
 
   // If not in header, check in cookies
-  // if (!token) {
-  //   token = req.cookies.token;
-  // }
+  if (!token && req.cookies) {
+    token = req.cookies.token;
+  }
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
@@ -37,12 +36,15 @@ const authenticateToken = async (
     // Verify the token
     const decoded = jwt.verify(token, config.jwt.secret) as { id: string };
 
-    // Find the user
-    const user = await User.findById(decoded.id).select("-password");
+    // Find the user by decoded id
+    const foundUser = await User.findById(decoded.id); // Fetch the user from the database
 
-    if (!user) {
+    if (!foundUser) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    // Explicitly cast foundUser to unknown first, then to IUser
+    const user = foundUser.toObject() as unknown as IUser;
 
     // Attach the user to the request
     req.user = user;
@@ -60,3 +62,7 @@ const authenticateToken = async (
 };
 
 export { authenticateToken, AuthRequested };
+
+
+
+

@@ -1,13 +1,10 @@
-import React from 'react';
-import Link from 'next/link';
-import CustomerProfile from './CustomerProfile/page';
-import PointsRedemption from './PointsRedemption/page';
-import ShopkeeperDashboard from './ShopkeeperDashboard/page';
+// app/page.tsx
 
-export default function Home() {
-  return (
-    <div>
-       <Home />
-    </div>
-  );
-}
+import React from 'react';
+import Home from './Home/page';
+
+const HomePage = () => {
+  return <Home />;
+};
+
+export default HomePage;

@@ -1,27 +1,25 @@
 import { Request, Response } from "express";
 import Customer from "../models/customer";
 import { CreateCustomerType, CreatePurchaseType } from "../types/all";
-import { json } from "stream/consumers";
 
 export const createCustomer = async (req: Request, res: Response) => {
   const { fullName, phoneNumber }: CreateCustomerType = req.body;
 
   try {
-    // check for an existing customer with phoneNumber
-
+    // Check for an existing customer with phoneNumber
     const tempPhone = phoneNumber.trim();
 
-    const customer = await Customer.create({ fullName, tempPhone });
+    const customer = await Customer.create({ fullName, phoneNumber: tempPhone });
 
     if (customer) {
       res
         .status(201)
-        .json({ customer, message: "customer created successfully" });
+        .json({ customer, message: "Customer created successfully" });
     } else {
-      res.status(500).json({ error: "something went wrong" });
+      res.status(500).json({ error: "Something went wrong" });
     }
   } catch (error) {
-    res.status(500).json({ error: "something went wrong" });
+    res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -31,24 +29,28 @@ export const getAllCustomers = async (req: Request, res: Response) => {
 
     res
       .status(200)
-      .json({ customers, message: "customers fetched successfully" });
+      .json({ customers, message: "Customers fetched successfully" });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ error: "Something went wrong" });
   }
 };
 
 export const getCustomerByPhone = async (req: Request, res: Response) => {
   let phone = req.params.phone;
   phone = phone.trim();
-  // phone from path param with key phone
-  const customer = await Customer.findOne({ phoneNumber: phone });
+  
+  try {
+    const customer = await Customer.findOne({ phoneNumber: phone });
 
-  if (customer) {
-    res
-      .status(200)
-      .json({ customer, message: "customer fetched successfully" });
-  } else {
-    res.status(404).json({ message: "customer not found" });
+    if (customer) {
+      res
+        .status(200)
+        .json({ customer, message: "Customer fetched successfully" });
+    } else {
+      res.status(404).json({ message: "Customer not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -65,14 +67,14 @@ export const purchase = async (req: Request, res: Response) => {
 
       const saved = await customer.save();
 
-      res.status(200).json({ customer: saved, message: "purchase successful" });
+      res.status(200).json({ customer: saved, message: "Purchase successful" });
     } else {
       res
         .status(404)
-        .json({ message: "customer with this phone number not found" });
+        .json({ message: "Customer with this phone number not found" });
     }
   } catch (err) {
-    res.status(500).json({ message: "something went wrong" });
+    res.status(500).json({ message: "Something went wrong" });
     console.log(err);
   }
 };
@@ -88,16 +90,20 @@ export const redeemPoints = async (req: Request, res: Response) => {
       if (customer.loyalityPoints >= points) {
         customer.loyalityPoints -= points;
         const saved = await customer.save();
-        res
-          .status(200)
-          .json({
-            customer: saved, 
-            pointsRedeemed: points,
-            message: "points redeemed successfully", });
+
+        res.status(200).json({
+          customer: saved,
+          pointsRedeemed: points,
+          message: "Points redeemed successfully",
+        });
       } else {
-        res.status(400).json({ message: "insufficient points" });
+        res.status(400).json({ message: "Insufficient points" });
       }
     } else {
-      res.status(404).json({ message: "customer not found" });
+      res.status(404).json({ message: "Customer not found" });
     }
-}
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+    console.log(error);
+  }
+};

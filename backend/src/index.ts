@@ -14,7 +14,6 @@ const PORT = config.server.port;
 app.use(
   cors({
     origin: true,
-
     credentials: true,
     allowedHeaders: ["Content-Type", "Set-Cookie", "Cookie"],
   })
@@ -35,7 +34,12 @@ app.use(cookieParser());
     registerRoutes(app);
 
     app.get("/test", (req: Request, res: Response) => {
-      res.status(200).json({ messge: "server is running" });
+      res.status(200).json({ message: "server is running" });
+    });
+
+    // Add your new endpoint here
+    app.get("/api/your-endpoint", (req: Request, res: Response) => {
+      res.json({ message: "Success!" });
     });
 
     app.listen(PORT, () => {
