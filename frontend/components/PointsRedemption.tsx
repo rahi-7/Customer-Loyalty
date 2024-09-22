@@ -4,15 +4,8 @@ import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
-interface PointsRedemptionProps {
-  points: number;
-  onRedeemSuccess: () => void;
-}
-
-const PointsRedemption: React.FC<PointsRedemptionProps> = ({
-  points,
-  onRedeemSuccess,
-}) => {
+const PointsRedemption = () => {
+  const [points] = useState<number>(0);
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [redeemPoints, setRedeemPoints] = useState<number>(0);
   const [error, setError] = useState<string>("");
@@ -44,7 +37,7 @@ const PointsRedemption: React.FC<PointsRedemptionProps> = ({
       );
       if (response.data.message) {
         setMessage(response.data.message);
-        onRedeemSuccess();
+        // onRedeemSuccess();
       }
     } catch (error: any) {
       if (error instanceof AxiosError)
