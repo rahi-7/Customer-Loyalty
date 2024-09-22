@@ -1,15 +1,15 @@
 "use client"; // Add this line to mark the component as a Client Component
 
-import { useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
-  const [firstName, setFirstName] = useState('');
-  const [middleName, setMiddleName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -17,33 +17,42 @@ export default function SignUp() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/create_user', {
-        firstName,
-        middleName,
-        lastName,
-        email,
-        password,
-      });
-        
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/create_user",
+        {
+          firstName,
+          middleName,
+          lastName,
+          email,
+          password,
+        }
+      );
+
       console.log(response);
-       if (response.status === 201) {
-         router.push('/Login');
-       } else {
-         setError(`Unexpected status code: ${response.status}`);
-       }
-    } catch (err: unknown) {
-      if (err.response) {
-        setError(err.response.data.message || 'Sign up failed');
+      if (response.status === 201) {
+        router.push("/Login");
       } else {
-        setError('An unexpected error occurred. Please try again.');
+        setError(`Unexpected status code: ${response.status}`);
       }
+    } catch (err: any) {
+      if (err instanceof AxiosError)
+        if (err.response) {
+          setError(err.response.data.message || "Sign up failed");
+        } else {
+          setError("An unexpected error occurred. Please try again.");
+        }
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-blue-300 to-green-300 p-4">
-      <h1 className="text-4xl font-extrabold text-gray-800 mb-6 text-center">Sign Up</h1>
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg space-y-4 w-full max-w-md">
+      <h1 className="text-4xl font-extrabold text-gray-800 mb-6 text-center">
+        Sign Up
+      </h1>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-lg shadow-lg space-y-4 w-full max-w-md"
+      >
         <input
           type="text"
           placeholder="First Name"
@@ -90,14 +99,13 @@ export default function SignUp() {
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         {error && <p className="text-red-500 text-center">{error}</p>}
-        <button type="submit" className="bg-blue-600 text-white w-full px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white w-full px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+        >
           Sign Up
         </button>
       </form>
     </div>
   );
 }
-
-
-
-
